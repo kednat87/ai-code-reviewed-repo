@@ -1,5 +1,5 @@
 import os
-import openai
+from openai import OpenAI
 import subprocess
 import requests
 
@@ -12,16 +12,15 @@ token = os.getenv("GITHUB_TOKEN")
 diff = subprocess.check_output(["git", "diff", "origin/main...HEAD"], text=True)
 
 # Call ChatGPT
-openai.api_key = os.getenv("OPENAI_API_KEY")
-response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[{
-        "role": "user",
-        "content": f"Review the following pull request diff and provide constructive feedback:\n\n{diff}"
-    }],
-    max_tokens=500
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are a code reviewer..."},
+        {"role": "user", "content": diff}
+    ]
 )
-review_comment = response['choices'][0]['message']['content']
+review_comment = response.choices[0].message.content
 
 # Post comment to PR
 url = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments"
