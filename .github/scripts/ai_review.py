@@ -14,7 +14,7 @@ diff = subprocess.check_output(["git", "diff", "origin/main...HEAD"], text=True)
 # Call ChatGPT
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 response = client.chat.completions.create(
-    model="gpt-4",
+    model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "You are a code reviewer..."},
         {"role": "user", "content": diff}
