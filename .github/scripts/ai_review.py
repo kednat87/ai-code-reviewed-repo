@@ -4,7 +4,7 @@ import subprocess
 import requests
 
 # Get PR info from GitHub Actions env
-pr_number = os.getenv("GITHUB_REF").split("/")[-1]
+pr_number = os.getenv("PR_NUMBER")
 repo = os.getenv("GITHUB_REPOSITORY")
 token = os.getenv("GITHUB_TOKEN")
 
