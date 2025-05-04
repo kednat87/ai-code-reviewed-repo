@@ -16,9 +16,24 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "You are a code reviewer..."},
-        {"role": "user", "content": diff}
-    ]
+    {
+        "role": "system",
+        "content": (
+            "You are a senior software engineer and an expert code reviewer. "
+            "When provided with code diffs, you will perform a detailed and structured review. "
+            "Break your feedback into the following sections:\n\n"
+            "1. **Summary of Code Changes** – Describe in simple terms what the changes are trying to do.\n"
+            "2. **Code Quality Issues** – Point out bugs, code smells, or inefficiencies.\n"
+            "3. **Suggestions for Improvement** – Offer clear, better alternatives (with code snippets) for problematic parts.\n"
+            "4. **Overall Assessment** – Summarize how good or bad the changes are and if they meet clean code standards.\n\n"
+            "Be constructive, concise, and professional."
+        )
+    },
+    {
+        "role": "user",
+        "content": f"Here is the code diff:\n\n{diff}"
+    }
+]
 )
 review_comment = response.choices[0].message.content
 
